@@ -1,14 +1,17 @@
-# Usar uma imagem base do Python
-FROM python:3.9
+# Use a imagem base do Go para construir a aplicação
+FROM arm64v8/golang:1.20-alpine AS builder
 
-# Copiar o diretório de trabalho atual para /app no contêiner
-COPY . /app
+# Defina o diretório de trabalho dentro do contêiner
+WORKDIR /go/src/app
 
-# Definir o diretório de trabalho
-WORKDIR /app
+# Copie o código-fonte para o diretório de trabalho do contêiner
+COPY . .
 
-# Instalar as dependências do script Python
-RUN pip install -r requirements.txt
+# Baixe as dependências do projeto
+RUN  get -d -v ./...
 
-# Definir o comando padrão para ser executado quando o contêiner for iniciado
-CMD ["python", "main.py"]
+# Compile o código Go
+RUN go build -o main
+
+# Defina o comando padrão para executar o binário
+CMD ["./main"]
