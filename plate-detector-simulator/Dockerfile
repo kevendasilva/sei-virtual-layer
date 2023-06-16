@@ -1,5 +1,5 @@
 # Use a imagem base do Go para construir a aplicação
-FROM arm64v8/golang:1.20-alpine AS builder
+FROM golang:latest
 
 # Defina o diretório de trabalho dentro do contêiner
 WORKDIR /go/src/app
@@ -8,7 +8,7 @@ WORKDIR /go/src/app
 COPY . .
 
 # Baixe as dependências do projeto
-RUN  get -d -v ./...
+RUN go get -d -v ./...
 
 # Compile o código Go
 RUN go build -o main
